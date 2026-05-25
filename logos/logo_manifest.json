@@ -1,0 +1,310 @@
+{
+  "ai_genspark": {
+    "path": "logos/ai_genspark.png",
+    "source": "fetched"
+  },
+  "dv_replicate": {
+    "path": "logos/dv_replicate.png",
+    "source": "fetched"
+  },
+  "vd_leonardo": {
+    "path": "logos/vd_leonardo.png",
+    "source": "fetched"
+  },
+  "dv_v0": {
+    "path": "logos/dv_v0.png",
+    "source": "fetched"
+  },
+  "ad_mercury": {
+    "path": "logos/ad_mercury.png",
+    "source": "fetched"
+  },
+  "dv_emergent": {
+    "path": "logos/dv_emergent.png",
+    "source": "fetched"
+  },
+  "dv_railway2": {
+    "path": "logos/dv_railway2.png",
+    "source": "fetched"
+  },
+  "ai_roocode": {
+    "path": "logos/ai_roocode.png",
+    "source": "fetched"
+  },
+  "ai_elevenlabs": {
+    "path": "logos/ai_elevenlabs.png",
+    "source": "fetched"
+  },
+  "ai_perplexity": {
+    "path": "logos/ai_perplexity.png",
+    "source": "fetched"
+  },
+  "dv_digitalocean": {
+    "path": "logos/dv_digitalocean.png",
+    "source": "fetched"
+  },
+  "vd_runway": {
+    "path": "logos/vd_runway.png",
+    "source": "fetched"
+  },
+  "dv_hetzner": {
+    "path": "logos/dv_hetzner.png",
+    "source": "fetched"
+  },
+  "vd_synthesia": {
+    "path": "logos/vd_synthesia.png",
+    "source": "fetched"
+  },
+  "ad_telegram": {
+    "path": "logos/ad_telegram.png",
+    "source": "fetched"
+  },
+  "ad_azure": {
+    "path": "logos/ad_azure.png",
+    "source": "fetched"
+  },
+  "ai_xai": {
+    "path": "logos/ai_xai.png",
+    "source": "fetched"
+  },
+  "vd_hailuo": {
+    "path": "logos/vd_hailuo.png",
+    "source": "fetched"
+  },
+  "dv_gitlab": {
+    "path": "logos/dv_gitlab.png",
+    "source": "fetched"
+  },
+  "ai_lovable": {
+    "path": "logos/ai_lovable.png",
+    "source": "fetched"
+  },
+  "vd_kling": {
+    "path": "logos/vd_kling.png",
+    "source": "fetched"
+  },
+  "ai_kimi": {
+    "path": "logos/ai_kimi.png",
+    "source": "fetched"
+  },
+  "dv_vercel": {
+    "path": "logos/dv_vercel.png",
+    "source": "fetched"
+  },
+  "ai_zhipu": {
+    "path": "logos/ai_zhipu.png",
+    "source": "fetched"
+  },
+  "dv_windsurf": {
+    "path": "logos/dv_windsurf.png",
+    "source": "fetched"
+  },
+  "ad_gcloud": {
+    "path": "logos/ad_gcloud.png",
+    "source": "fetched"
+  },
+  "ai_copilot": {
+    "path": "logos/ai_copilot.png",
+    "source": "fetched"
+  },
+  "ad_neo": {
+    "path": "logos/ad_neo.png",
+    "source": "fetched"
+  },
+  "ai_chatgpt": {
+    "path": "logos/ai_chatgpt.png",
+    "source": "fetched"
+  },
+  "ai_openai": {
+    "path": "logos/ai_openai.png",
+    "source": "fetched"
+  },
+  "vd_invideo": {
+    "path": "logos/vd_invideo.png",
+    "source": "fetched"
+  },
+  "ai_anthropic": {
+    "path": "logos/ai_anthropic.png",
+    "source": "fetched"
+  },
+  "ai_gemini": {
+    "path": "logos/ai_gemini.png",
+    "source": "fetched"
+  },
+  "ai_codex": {
+    "path": "logos/ai_codex.png",
+    "source": "fetched"
+  },
+  "ad_gdrive": {
+    "path": "logos/ad_gdrive.png",
+    "source": "fetched"
+  },
+  "dv_posthog": {
+    "path": "logos/dv_posthog.png",
+    "source": "fetched"
+  },
+  "dv_github": {
+    "path": "logos/dv_github.png",
+    "source": "fetched"
+  },
+  "dv_zitadel": {
+    "path": "logos/dv_zitadel.png",
+    "source": "fetched"
+  },
+  "ai_zencoder": {
+    "path": "logos/ai_zencoder.png",
+    "source": "fetched"
+  },
+  "ai_minimax": {
+    "path": "logos/ai_minimax.png",
+    "source": "fetched"
+  },
+  "ai_deepseek": {
+    "path": "logos/ai_deepseek.png",
+    "source": "fetched"
+  },
+  "vd_ltx": {
+    "path": "logos/vd_ltx.png",
+    "source": "fetched"
+  },
+  "ai_meta": {
+    "path": "logos/ai_meta.png",
+    "source": "fetched"
+  },
+  "dv_notion": {
+    "path": "logos/dv_notion.png",
+    "source": "fetched"
+  },
+  "ai_polsia": {
+    "path": "logos/ai_polsia.png",
+    "source": "fetched"
+  },
+  "dv_lightning": {
+    "path": "logos/dv_lightning.png",
+    "source": "fetched"
+  },
+  "ad_gmail": {
+    "path": "logos/ad_gmail.png",
+    "source": "fetched"
+  },
+  "ai_creatify": {
+    "path": "logos/ai_creatify.png",
+    "source": "fetched"
+  },
+  "ai_fastgpt": {
+    "path": "logos/ai_fastgpt.png",
+    "source": "fetched"
+  },
+  "ai_huggingface": {
+    "path": "logos/ai_huggingface.png",
+    "source": "fetched"
+  },
+  "dv_railway": {
+    "path": "logos/dv_railway.png",
+    "source": "fetched"
+  },
+  "ad_dropbox": {
+    "path": "logos/ad_dropbox.png",
+    "source": "fetched"
+  },
+  "ai_claude": {
+    "path": "logos/ai_claude.png",
+    "source": "fetched"
+  },
+  "ad_spotify": {
+    "path": "logos/ad_spotify.png",
+    "source": "fetched"
+  },
+  "dv_supabase": {
+    "path": "logos/dv_supabase.png",
+    "source": "fetched"
+  },
+  "ai_lambda": {
+    "path": "logos/ai_lambda.png",
+    "source": "fetched"
+  },
+  "dv_n8n": {
+    "path": "logos/dv_n8n.png",
+    "source": "fetched"
+  },
+  "ai_livekit": {
+    "path": "logos/ai_livekit.png",
+    "source": "fetched"
+  },
+  "dv_airtable": {
+    "path": "logos/dv_airtable.png",
+    "source": "fetched"
+  },
+  "dv_augment": {
+    "path": "logos/dv_augment.png",
+    "source": "fetched"
+  },
+  "dv_cursor": {
+    "path": "logos/dv_cursor.png",
+    "source": "fetched"
+  },
+  "dv_vast": {
+    "path": "logos/dv_vast.png",
+    "source": "fetched"
+  },
+  "dv_hivelocity": {
+    "path": "logos/dv_hivelocity.png",
+    "source": "fetched"
+  },
+  "ai_grok": {
+    "path": "logos/ai_grok.png",
+    "source": "fetched"
+  },
+  "ad_ghl": {
+    "path": "logos/ad_ghl.png",
+    "source": "fetched"
+  },
+  "ad_canva": {
+    "path": "logos/ad_canva.png",
+    "source": "fetched"
+  },
+  "dv_zapier": {
+    "path": "logos/dv_zapier.png",
+    "source": "fetched"
+  },
+  "ai_capcut": {
+    "path": "logos/ai_capcut.png",
+    "source": "fetched"
+  },
+  "ai_mistral": {
+    "path": "logos/ai_mistral.png",
+    "source": "fetched"
+  },
+  "dv_stripe": {
+    "path": "logos/dv_stripe.png",
+    "source": "fetched"
+  },
+  "dv_lovable": {
+    "path": "logos/dv_lovable.png",
+    "source": "fetched"
+  },
+  "vd_visla": {
+    "path": "logos/vd_visla.png",
+    "source": "fetched"
+  },
+  "dv_cloudflare": {
+    "path": "logos/dv_cloudflare.png",
+    "source": "fetched"
+  },
+  "dv_clerk": {
+    "path": "logos/dv_clerk.png",
+    "source": "fetched"
+  },
+  "ai_requesty": {
+    "path": "logos/ai_requesty.png",
+    "source": "fetched"
+  },
+  "dv_sentry": {
+    "path": "logos/dv_sentry.png",
+    "source": "fetched"
+  },
+  "ai_collaby": {
+    "path": "logos/ai_collaby.png",
+    "source": "fetched"
+  }
+}

@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AEON OPS // CRUZ DASHBOARD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080d;--bg-card:#0c0e15;--bg-card-h:#111420;
+  --border:rgba(255,255,255,0.055);--border-h:rgba(249,115,22,0.35);
+  --orange:#f97316;--cyan:#22d3ee;
+  --text:#b8c1cc;--text-dim:#4e5a6a;--text-bright:#eaf0f6;
+  --green:#4ade80;--yellow:#fbbf24;--red:#f87171;--purple:#a78bfa;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(249,115,22,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,0.022) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;top:-120px;left:50%;transform:translateX(-50%);width:1000px;height:520px;background:radial-gradient(ellipse at 50% 0%,rgba(249,115,22,0.065) 0%,transparent 65%);pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;max-width:1520px;margin:0 auto;padding:20px 26px 60px;}
+
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);gap:16px;flex-wrap:wrap;}
+.logo{display:flex;align-items:center;gap:13px;}
+.fox{width:32px;height:32px;flex-shrink:0;background:var(--orange);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);}
+.logo-text{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:19px;letter-spacing:0.18em;color:var(--text-bright);line-height:1;}
+.logo-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--orange);letter-spacing:0.32em;text-transform:uppercase;margin-top:3px;}
+.clock-block{text-align:right;}
+.clock-time{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:300;color:var(--text-bright);letter-spacing:0.04em;line-height:1;}
+.clock-date{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:0.22em;text-transform:uppercase;margin-top:4px;}
+
+/* SEARCH */
+.search-wrap{margin-bottom:14px;position:relative;}
+.search-input{width:100%;padding:11px 16px 11px 42px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text-bright);font-family:'Barlow',sans-serif;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s;}
+.search-input::placeholder{color:var(--text-dim);}
+.search-input:focus{border-color:rgba(249,115,22,.5);box-shadow:0 0 0 3px rgba(249,115,22,.07);}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-dim);font-size:14px;pointer-events:none;font-family:'JetBrains Mono',monospace;}
+.search-kbd{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.1em;pointer-events:none;}
+
+/* PINNED */
+.pinned-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--orange);margin-bottom:7px;display:flex;align-items:center;gap:8px;}
+.pinned-label::after{content:'';flex:1;height:1px;background:rgba(249,115,22,0.2);}
+.pinned-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;align-items:center;}
+.pin-group{position:relative;display:inline-flex;}
+.pin{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;text-decoration:none;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;transition:background .15s,border-color .15s,color .15s;white-space:nowrap;cursor:pointer;}
+.pin:hover{background:var(--bg-card-h);border-color:rgba(249,115,22,.3);color:var(--text-bright);}
+.pin-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.pin-menu-btn{position:absolute;top:-5px;right:-5px;width:15px;height:15px;background:#1a1c28;border:1px solid var(--border);border-radius:50%;color:var(--text-dim);font-size:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;line-height:1;padding:0;}
+.pin-group:hover .pin-menu-btn{opacity:1;}
+.pin-add{background:rgba(249,115,22,.08);border-color:rgba(249,115,22,.2);color:var(--orange);font-size:15px;padding:4px 13px;cursor:pointer;}
+.pin-add:hover{background:rgba(249,115,22,.15);}
+
+/* TABS */
+.tabs{display:flex;gap:1px;margin-bottom:18px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.tab{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);padding:7px 13px 9px;cursor:pointer;border-bottom:2px solid transparent;position:relative;bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange);}
+
+/* SECTION HEADER */
+.section-wrap{margin-bottom:24px;position:relative;}
+.section-wrap.section-dragging{opacity:.35;}
+.section-header{display:flex;align-items:center;gap:9px;margin-bottom:10px;cursor:default;}
+.section-drag-handle{color:var(--text-dim);font-size:15px;cursor:grab;user-select:none;padding:2px 4px;border-radius:3px;transition:color .15s,background .15s;flex-shrink:0;line-height:1;}
+.section-drag-handle:hover{color:var(--orange);background:rgba(249,115,22,.08);}
+.section-drag-handle:active{cursor:grabbing;}
+.sh-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--text-dim);white-space:nowrap;}
+.sh-label.pri{color:var(--orange);font-size:10px;}
+.sh-line{flex:1;height:1px;background:var(--border);}
+.sh-line.pri{background:rgba(249,115,22,.2);}
+.section-menu-btn{background:none;border:none;color:var(--text-dim);font-size:15px;cursor:pointer;padding:2px 6px;border-radius:3px;transition:color .15s,background .15s;flex-shrink:0;line-height:1;}
+.section-menu-btn:hover{color:var(--text-bright);background:rgba(255,255,255,.06);}
+
+/* CARDS */
+.section-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:5px;padding:11px 13px 12px;cursor:pointer;color:var(--text);transition:background .15s,border-color .18s,transform .12s;display:flex;flex-direction:column;position:relative;overflow:hidden;user-select:none;}
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--c-accent,var(--orange));opacity:0;transition:opacity .18s;}
+.card:hover{background:var(--bg-card-h);border-color:rgba(249,115,22,.22);transform:translateY(-1px);}
+.card:hover::before{opacity:1;}
+.card.dragging{opacity:.25;transform:scale(.97);}
+.card-icon{font-size:14px;margin-bottom:7px;line-height:1;}
+.card-label{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--text-bright);line-height:1.2;}
+.card-url-txt{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text-dim);margin-top:3px;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.card-badge{position:absolute;top:7px;right:26px;font-family:'JetBrains Mono',monospace;font-size:7px;font-weight:500;letter-spacing:.1em;padding:2px 4px;border-radius:2px;text-transform:uppercase;}
+.b-live{background:rgba(74,222,128,.12);color:var(--green);border:1px solid rgba(74,222,128,.25);}
+.b-fav{background:rgba(249,115,22,.12);color:var(--orange);border:1px solid rgba(249,115,22,.25);}
+.b-wip{background:rgba(251,191,36,.12);color:var(--yellow);border:1px solid rgba(251,191,36,.25);}
+
+/* CARD THREE-DOT */
+.card-menu-btn{position:absolute;top:6px;right:6px;width:20px;height:20px;background:none;border:none;color:var(--text-dim);font-size:13px;cursor:pointer;border-radius:3px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s,background .15s,color .15s;z-index:2;line-height:1;padding:0;}
+.card:hover .card-menu-btn{opacity:1;}
+.card-menu-btn:hover{background:rgba(255,255,255,.1);color:var(--text-bright);}
+
+/* ADD CARD TILE */
+.add-card-tile{background:transparent;border:1px dashed rgba(255,255,255,.09);border-radius:5px;min-height:74px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:20px;font-weight:300;transition:border-color .15s,color .15s,background .15s;}
+.add-card-tile:hover{border-color:rgba(249,115,22,.4);color:var(--orange);background:rgba(249,115,22,.05);}
+
+/* DROP SLOTS */
+.card-drop-slot{background:rgba(249,115,22,.12);border:1px dashed rgba(249,115,22,.4);border-radius:5px;min-height:74px;}
+.section-drop-slot{height:3px;background:var(--orange);border-radius:2px;margin:6px 0;box-shadow:0 0 8px rgba(249,115,22,.5);}
+
+/* ADD SECTION */
+.add-section-btn{width:100%;padding:13px;margin-top:4px;background:transparent;border:1px dashed rgba(255,255,255,.07);border-radius:6px;cursor:pointer;color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.22em;text-transform:uppercase;transition:all .15s;}
+.add-section-btn:hover{border-color:rgba(249,115,22,.35);color:var(--orange);background:rgba(249,115,22,.04);}
+
+/* DROPDOWN */
+.dropdown{position:fixed;z-index:1000;background:#13151f;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px;min-width:160px;box-shadow:0 8px 32px rgba(0,0,0,.7);}
+.dropdown.hidden{display:none;}
+.dd-item{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:4px;cursor:pointer;font-family:'Barlow',sans-serif;font-size:13px;color:var(--text);transition:background .12s,color .12s;background:none;border:none;width:100%;text-align:left;}
+.dd-item:hover{background:rgba(255,255,255,.07);color:var(--text-bright);}
+.dd-item.danger:hover{background:rgba(248,113,113,.1);color:var(--red);}
+.dd-sep{height:1px;background:var(--border);margin:4px 0;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:900;backdrop-filter:blur(3px);}
+.modal-overlay.hidden{display:none;}
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:901;background:#0f1019;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:26px;width:430px;max-width:calc(100vw - 28px);box-shadow:0 20px 60px rgba(0,0,0,.85);}
+.modal.hidden{display:none;}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;color:var(--text-bright);letter-spacing:.08em;margin-bottom:18px;}
+.modal-field{margin-bottom:12px;}
+.m-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px;display:block;}
+.m-input{width:100%;padding:8px 11px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:5px;color:var(--text-bright);font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:border-color .15s;}
+.m-input:focus{border-color:rgba(249,115,22,.5);}
+.m-input::placeholder{color:var(--text-dim);}
+.m-row{display:flex;gap:10px;}
+.icon-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-top:5px;}
+.icon-opt{height:30px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:13px;transition:all .12s;color:var(--text);}
+.icon-opt:hover,.icon-opt.sel{background:rgba(249,115,22,.15);border-color:rgba(249,115,22,.4);color:var(--orange);}
+.modal-actions{display:flex;gap:8px;margin-top:18px;justify-content:flex-end;}
+.btn-cancel{padding:8px 16px;background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text);cursor:pointer;font-family:'Barlow',sans-serif;font-size:13px;transition:all .15s;}
+.btn-cancel:hover{border-color:rgba(255,255,255,.2);color:var(--text-bright);}
+.btn-save{padding:8px 20px;background:var(--orange);border:none;border-radius:5px;color:#fff;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.08em;transition:background .15s;}
+.btn-save:hover{background:#ea6c1a;}
+
+/* FOOTER */
+footer{margin-top:36px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.foot-sig{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.18em;}
+.foot-sig span{color:var(--orange);}
+.foot-reset{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.15em;cursor:pointer;background:none;border:none;transition:color .15s;}
+.foot-reset:hover{color:var(--red);}
+
+@media(max-width:900px){.wrap{padding:12px 12px 40px;}.section-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));}.clock-time{font-size:20px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo">
+    <div class="fox"></div>
+    <div>
+      <div class="logo-text">AEON OPS</div>
+      <div class="logo-sub">Architect Cruz &nbsp;·&nbsp; SNRG Labs × Vulpine</div>
+    </div>
+  </div>
+  <div class="clock-block">
+    <div class="clock-time" id="clk">--:--:--</div>
+    <div class="clock-date" id="clk-date">---</div>
+  </div>
+</header>
+
+<div class="search-wrap">
+  <form action="https://www.google.com/search" method="get" target="_blank" style="position:relative;">
+    <span class="search-icon">⌕</span>
+    <input class="search-input" type="text" name="q" id="srch" placeholder="Search the web  ·  press / to focus" autocomplete="off">
+    <span class="search-kbd">↵ SEARCH</span>
+  </form>
+</div>
+
+<div class="pinned-label">Everyday AI &nbsp;·&nbsp; Pinned</div>
+<div class="pinned-grid" id="pinned-grid"></div>
+
+<div class="tabs" id="tabs-bar">
+  <button class="tab active" data-filter="all">All</button>
+  <button class="tab" data-filter="ai">AI Models</button>
+  <button class="tab" data-filter="dev">Dev</button>
+  <button class="tab" data-filter="admin">Admin</button>
+  <button class="tab" data-filter="projects">Projects</button>
+  <button class="tab" data-filter="video">Video Gen</button>
+  <button class="tab" data-filter="telephony">Telephony</button>
+  <button class="tab" data-filter="ui">UI Libs</button>
+  <button class="tab" data-filter="google">Google</button>
+  <button class="tab" data-filter="lab">Vercel Lab</button>
+</div>
+
+<div id="sections-container"></div>
+<button class="add-section-btn" id="add-section-btn">+ Add Section</button>
+
+<footer>
+  <div class="foot-sig">VULPINE LLC <span>×</span> SNRG LABS &nbsp;·&nbsp; ARCHITECT CRUZ</div>
+  <button class="foot-reset" onclick="resetDashboard()">↺ Reset to Defaults</button>
+</footer>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay hidden" id="modal-overlay"></div>
+<div class="modal hidden" id="modal">
+  <div class="modal-title" id="modal-title">Add Site</div>
+  <div class="modal-field">
+    <label class="m-label">Label</label>
+    <input class="m-input" id="m-label" placeholder="Site name" autocomplete="off">
+  </div>
+  <div class="modal-field" id="url-field">
+    <label class="m-label">URL</label>
+    <input class="m-input" id="m-url" placeholder="https://" autocomplete="off">
+  </div>
+  <div class="m-row" id="color-icon-row">
+    <div class="modal-field" style="flex:1">
+      <label class="m-label">Accent Color</label>
+      <input type="color" id="m-color" value="#f97316" style="width:100%;height:34px;border-radius:5px;border:1px solid var(--border);background:rgba(255,255,255,.04);cursor:pointer;padding:2px 4px;">
+    </div>
+    <div class="modal-field" style="flex:0 0 60px">
+      <label class="m-label">Icon</label>
+      <div id="m-icon-display" style="height:34px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:5px;font-size:15px;">◈</div>
+    </div>
+  </div>
+  <div class="modal-field" id="icon-field">
+    <label class="m-label">Pick Icon</label>
+    <div class="icon-grid" id="icon-grid"></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn-cancel" id="modal-cancel">Cancel</button>
+    <button class="btn-save" id="modal-save">Save</button>
+  </div>
+</div>
+
+<!-- DROPDOWN -->
+<div class="dropdown hidden" id="dropdown"></div>
+
+<script>
+const ICONS=['◈','◆','◎','◉','◇','⬡','⊞','⊠','◻','▣','△','⋈','⌥','✦','✕','⟳','⚡','λ','☁','✉','☎','▶','♪','◷','⌂','✈','⬛','◐','⊕','⋆'];
+
+const DEFAULT_DATA={
+  pinned:[
+    {id:'p1',label:'Claude',url:'https://claude.ai/',color:'#e8622a'},
+    {id:'p2',label:'ChatGPT',url:'https://chatgpt.com/',color:'#10a37f'},
+    {id:'p3',label:'Gemini',url:'https://gemini.google.com/app',color:'#4285f4'},
+    {id:'p4',label:'Perplexity',url:'https://www.perplexity.ai/',color:'#22d3ee'},
+    {id:'p5',label:'Genspark',url:'https://www.genspark.ai/',color:'#f97316'},
+    {id:'p6',label:'AI Studio',url:'https://aistudio.google.com/',color:'#4285f4'},
+    {id:'p7',label:'Flow',url:'https://labs.google/fx/tools/flow',color:'#4285f4'},
+    {id:'p8',label:'Vercel',url:'https://vercel.com/elohim',color:'#ffffff'},
+    {id:'p9',label:'Deployments',url:'https://vercel.com/elohim/~/deployments',color:'#ffffff'},
+    {id:'p10',label:'Drive',url:'https://drive.google.com/',color:'#4285f4'},
+    {id:'p11',label:'Docs',url:'https://docs.google.com/document/u/0/',color:'#4285f4'},
+    {id:'p12',label:'Dropbox',url:'https://www.dropbox.com/home',color:'#0061ff'},
+    {id:'p13',label:'Canva AI',url:'https://www.canva.com/ai',color:'#00c4cc'},
+    {id:'p14',label:'Google',url:'https://www.google.com/',color:'#ea4335'},
+    {id:'p15',label:'Solscan',url:'https://solscan.io/account/523vdNYYi44e762Qd7eU6HQGULQsRbsZLYp9g69weAr5#portfolio',color:'#a78bfa'}
+  ],
+  sections:[
+    {id:'s_ai',label:'AI Models & Platforms',filter:'ai',priority:true,cards:[
+      {id:'ai1',label:'Claude',url:'https://claude.ai/',color:'#e8622a',icon:'◈'},
+      {id:'ai2',label:'ChatGPT',url:'https://chatgpt.com/',color:'#10a37f',icon:'◆'},
+      {id:'ai3',label:'Codex',url:'https://chatgpt.com/codex',color:'#10a37f',icon:'⬡'},
+      {id:'ai4',label:'Grok',url:'https://grok.com/',color:'#eaf0f6',icon:'✦'},
+      {id:'ai5',label:'Gemini',url:'https://gemini.google.com/app',color:'#4285f4',icon:'✦'},
+      {id:'ai6',label:'Perplexity',url:'https://www.perplexity.ai/',color:'#22d3ee',icon:'◎'},
+      {id:'ai7',label:'Mistral',url:'https://chat.mistral.ai/chat',color:'#ff7700',icon:'◉'},
+      {id:'ai8',label:'DeepSeek Chat',url:'https://chat.deepseek.com/',color:'#4f9cf9',icon:'◈'},
+      {id:'ai9',label:'Meta AI',url:'https://www.meta.ai/',color:'#0866ff',icon:'◆'},
+      {id:'ai10',label:'Copilot',url:'https://copilot.microsoft.com/',color:'#2563eb',icon:'◇'},
+      {id:'ai11',label:'Kimi',url:'https://www.kimi.com/',color:'#22d3ee',icon:'◎'},
+      {id:'ai12',label:'Genspark',url:'https://www.genspark.ai/',color:'#f97316',icon:'⬡'},
+      {id:'ai13',label:'MiniMax Agent',url:'https://agent.minimax.io/',color:'#a78bfa',icon:'◉'},
+      {id:'ai14',label:'ElevenLabs',url:'https://elevenlabs.io/app/home',color:'#fbbf24',icon:'♪'},
+      {id:'ai15',label:'MaxAI',url:'https://www.maxai.co/',color:'#22d3ee',icon:'◈'},
+      {id:'ai16',label:'CapCut',url:'https://www.capcut.com/',color:'#4ade80',icon:'▶'},
+      {id:'ai17',label:'Requesty',url:'https://app.requesty.ai/',color:'#f97316',icon:'◈'},
+      {id:'ai18',label:'AthenaLab',url:'https://athenalab.ai/',color:'#22d3ee',icon:'◎'},
+      {id:'ai19',label:'Polsia',url:'https://polsia.com/dashboard/vulpineos',color:'#a78bfa',icon:'⬡'},
+      {id:'ai20',label:'xAI Console',url:'https://console.x.ai/team/bfcdb2ab-e8e0-42ad-939d-fe8ab681bbfc',color:'#eaf0f6',icon:'✕'},
+      {id:'ai21',label:'LiveKit Cloud',url:'https://cloud.livekit.io/',color:'#f97316',icon:'◉'},
+      {id:'ai22',label:'FastGPT',url:'https://fastgpt.cn/en',color:'#22d3ee',icon:'⚡'},
+      {id:'ai23',label:'Mistral Console',url:'https://console.mistral.ai/home',color:'#ff7700',icon:'◈'},
+      {id:'ai24',label:'Prompt Genie',url:'https://www.prompt-genie.com/dashboard',color:'#a78bfa',icon:'◇'},
+      {id:'ai25',label:'ZhipuAI',url:'https://open.bigmodel.cn/',color:'#38bdf8',icon:'◉'},
+      {id:'ai26',label:'DeepSeek Platform',url:'https://platform.deepseek.com/api_keys',color:'#4f9cf9',icon:'⊠'},
+      {id:'ai27',label:'HuggingFace',url:'https://huggingface.co/',color:'#fbbf24',icon:'◉'},
+      {id:'ai28',label:'Creatify',url:'https://app.creatify.ai/home',color:'#a78bfa',icon:'▶'},
+      {id:'ai29',label:'Clipto',url:'https://www.clipto.com/apps/transcription',color:'#22d3ee',icon:'◎'},
+      {id:'ai30',label:'ToolFK',url:'https://www.toolfk.com/',color:'#f97316',icon:'⊞'},
+      {id:'ai31',label:'Zencoder',url:'https://zencoder.ai/',color:'#4ade80',icon:'⌥'},
+      {id:'ai32',label:'DeepSite',url:'https://enzostvs-deepsite.hf.space/',color:'#fbbf24',icon:'✦'},
+      {id:'ai33',label:'Roo Code',url:'https://roocode.com/',color:'#4ade80',icon:'⌥'},
+      {id:'ai34',label:'Lambda Cloud',url:'https://cloud.lambda.ai/instances',color:'#a78bfa',icon:'λ'},
+      {id:'ai35',label:'Collaby AI',url:'https://collaby.ai/',color:'#22d3ee',icon:'◈'},
+      {id:'ai36',label:'LiveKit',url:'https://livekit.io/',color:'#f97316',icon:'◉'},
+      {id:'ai37',label:'Anthropic Console',url:'https://console.anthropic.com/dashboard',color:'#e8622a',icon:'◈'},
+      {id:'ai38',label:'OpenAI Platform',url:'https://platform.openai.com/chat',color:'#10a37f',icon:'◆'},
+      {id:'ai39',label:'AI Studio',url:'https://aistudio.google.com/',color:'#4285f4',icon:'⬡'},
+      {id:'ai40',label:'Lovable',url:'https://lovable.dev/',color:'#f97316',icon:'◇'}
+    ]},
+    {id:'s_dev',label:'Dev & Infrastructure',filter:'dev',priority:true,cards:[
+      {id:'dv1',label:'GitHub (Mine)',url:'https://github.com/rosegoldcruz?tab=repositories',color:'#eaf0f6',icon:'⌥'},
+      {id:'dv2',label:'GitHub',url:'https://github.com/',color:'#eaf0f6',icon:'⌥'},
+      {id:'dv3',label:'GitLab AEON',url:'https://gitlab.com/aeon9855232',color:'#fc6d26',icon:'⌥'},
+      {id:'dv4',label:'Vercel',url:'https://vercel.com/elohim',color:'#eaf0f6',icon:'△'},
+      {id:'dv5',label:'v0 by Vercel',url:'https://v0.dev/',color:'#eaf0f6',icon:'△'},
+      {id:'dv6',label:'Supabase',url:'https://supabase.com/dashboard',color:'#3ecf8e',icon:'◉'},
+      {id:'dv7',label:'Supabase Keys',url:'https://supabase.com/dashboard/project/rlprgoppztcdvlodkdqr/settings/api-keys',color:'#3ecf8e',icon:'⊠'},
+      {id:'dv8',label:'Airtable',url:'https://airtable.com/',color:'#2d7be5',icon:'⊞'},
+      {id:'dv9',label:'Stripe',url:'https://dashboard.stripe.com/',color:'#635bff',icon:'⊠'},
+      {id:'dv10',label:'n8n AEON',url:'https://n8n.aeondial.com/',color:'#f97316',icon:'⟳'},
+      {id:'dv11',label:'ZITADEL',url:'https://zitadel.com/admin/dashboard',color:'#22d3ee',icon:'◈'},
+      {id:'dv12',label:'Cloudflare',url:'https://dash.cloudflare.com/',color:'#f6821f',icon:'☁'},
+      {id:'dv13',label:'Cloudflare One',url:'https://one.dash.cloudflare.com/',color:'#f6821f',icon:'☁'},
+      {id:'dv14',label:'Clerk',url:'https://dashboard.clerk.com/',color:'#6c47ff',icon:'◈'},
+      {id:'dv15',label:'Railway',url:'https://railway.com/dashboard',color:'#c084fc',icon:'◈'},
+      {id:'dv16',label:'DigitalOcean',url:'https://cloud.digitalocean.com/',color:'#0080ff',icon:'◎'},
+      {id:'dv17',label:'Hivelocity',url:'https://my.hivelocity.net/auth/login',color:'#a78bfa',icon:'▣'},
+      {id:'dv18',label:'Hetzner',url:'https://console.hetzner.com/',color:'#d50c2d',icon:'▣'},
+      {id:'dv19',label:'vast.ai',url:'https://cloud.vast.ai/',color:'#22d3ee',icon:'▣'},
+      {id:'dv20',label:'Lightning AI',url:'https://lightning.ai/',color:'#fbbf24',icon:'⚡'},
+      {id:'dv21',label:'Replicate',url:'https://replicate.com/',color:'#eaf0f6',icon:'◉'},
+      {id:'dv22',label:'Windsurf',url:'https://windsurf.com/',color:'#22d3ee',icon:'⋈'},
+      {id:'dv23',label:'Cursor',url:'https://cursor.com/en',color:'#eaf0f6',icon:'⌥'},
+      {id:'dv24',label:'Augment',url:'https://app.augmentcode.com/account/subscription',color:'#4ade80',icon:'⌥'},
+      {id:'dv25',label:'Sentry',url:'https://aeon-investments-technologies.sentry.io/dashboards/',color:'#f87171',icon:'◈'},
+      {id:'dv26',label:'PostHog',url:'https://us.posthog.com/project/192816',color:'#fbbf24',icon:'◉'},
+      {id:'dv27',label:'Zapier',url:'https://zapier.com/app/home',color:'#ff4a00',icon:'⟳'},
+      {id:'dv28',label:'ngrok',url:'https://dashboard.ngrok.com/',color:'#22d3ee',icon:'◈'},
+      {id:'dv29',label:'anything.world',url:'https://app.anything.world/',color:'#a78bfa',icon:'⬡'},
+      {id:'dv30',label:'Emergent',url:'https://app.emergent.sh/',color:'#22d3ee',icon:'⚡'},
+      {id:'dv31',label:'Famous.ai',url:'https://famous.ai/',color:'#a78bfa',icon:'✦'},
+      {id:'dv32',label:'Tripo3D',url:'https://studio.tripo3d.ai/',color:'#22d3ee',icon:'◉'},
+      {id:'dv33',label:'Sketchfab',url:'https://sketchfab.com/',color:'#1caad9',icon:'◉'},
+      {id:'dv34',label:'Notion',url:'https://www.notion.so/',color:'#eaf0f6',icon:'◻'},
+      {id:'dv35',label:'Publer',url:'https://app.publer.com/',color:'#4285f4',icon:'◈'},
+      {id:'dv36',label:'Outlier',url:'https://app.outlier.ai/v2',color:'#22d3ee',icon:'◎'},
+      {id:'dv37',label:'EmailJS',url:'https://dashboard.emailjs.com/admin',color:'#f97316',icon:'✉'},
+      {id:'dv38',label:'Web3Forms',url:'https://web3forms.com/',color:'#4ade80',icon:'◈'},
+      {id:'dv39',label:'Formspree',url:'https://formspree.io/',color:'#f97316',icon:'◻'},
+      {id:'dv40',label:'FB Developers',url:'https://developers.facebook.com/apps',color:'#0866ff',icon:'⬡'},
+      {id:'dv41',label:'Apify',url:'https://console.apify.com/actors/YJCnS9qogi9XxDgLB/input',color:'#22d3ee',icon:'⟳'},
+      {id:'dv42',label:'QR Generator',url:'https://goqr.me/',color:'#4ade80',icon:'⊞'},
+      {id:'dv43',label:'iLovePDF',url:'https://www.ilovepdf.com/',color:'#f87171',icon:'◈'},
+      {id:'dv44',label:'PDF24',url:'https://tools.pdf24.org/en/',color:'#f97316',icon:'◈'},
+      {id:'dv45',label:'Taskade',url:'https://www.taskade.com/',color:'#a78bfa',icon:'◻'},
+      {id:'dv46',label:'UX Pilot',url:'https://uxpilot.ai/a',color:'#a78bfa',icon:'◇'},
+      {id:'dv47',label:'Sourceforge',url:'https://sourceforge.net/',color:'#22d3ee',icon:'◈'}
+    ]},
+    {id:'s_admin',label:'Admin & Email',filter:'admin',priority:true,cards:[
+      {id:'ad1',label:'Gmail',url:'https://mail.google.com/mail/u/0/#inbox',color:'#ea4335',icon:'✉'},
+      {id:'ad2',label:'NEO MAiL',url:'https://app.neo.space/mail/',color:'#38bdf8',icon:'✉'},
+      {id:'ad3',label:'Mercury',url:'https://app.mercury.com/login',color:'#22d3ee',icon:'⊠'},
+      {id:'ad4',label:'Stripe',url:'https://dashboard.stripe.com/',color:'#635bff',icon:'⊠'},
+      {id:'ad5',label:'Vertex AI',url:'https://console.cloud.google.com/vertex-ai/studio',color:'#4285f4',icon:'⬡'},
+      {id:'ad6',label:'Google Cloud',url:'https://console.cloud.google.com/',color:'#4285f4',icon:'☁'},
+      {id:'ad7',label:'Drive',url:'https://drive.google.com/',color:'#4285f4',icon:'◈'},
+      {id:'ad8',label:'Google Admin',url:'https://admin.google.com/',color:'#4285f4',icon:'⬡'},
+      {id:'ad9',label:'Remote Desktop',url:'https://remotedesktop.google.com/access/',color:'#4285f4',icon:'◉'},
+      {id:'ad10',label:'Google Photos',url:'https://photos.google.com/',color:'#ea4335',icon:'◇'},
+      {id:'ad11',label:'Microsoft Admin',url:'https://admin.microsoft.com/AdminPortal/',color:'#0078d4',icon:'⊞'},
+      {id:'ad12',label:'Azure',url:'https://portal.azure.com/',color:'#0078d4',icon:'☁'},
+      {id:'ad13',label:'M365 Copilot',url:'https://m365.cloud.microsoft/search/',color:'#0078d4',icon:'◈'},
+      {id:'ad14',label:'GHL Vulpine',url:'https://app.gohighlevel.com/v2/location/OOxBz4Jalnuam4eNqhvD/memberships/client-portal/dashboard',color:'#25d366',icon:'⬡'},
+      {id:'ad15',label:'Spotify',url:'https://open.spotify.com/',color:'#1db954',icon:'♪'},
+      {id:'ad16',label:'Telegram',url:'https://my.telegram.org/',color:'#229ed9',icon:'✈'},
+      {id:'ad17',label:'Canva',url:'https://www.canva.com/',color:'#00c4cc',icon:'◇'}
+    ]},
+    {id:'s_proj',label:'Live Projects & Domains',filter:'projects',priority:false,cards:[
+      {id:'pr1',label:'AEON OPS',url:'https://aeonops.com/',color:'#f97316',icon:'◈',badge:'wip'},
+      {id:'pr2',label:'AEON CRM Dialer',url:'https://ivsol.aeondial.com/dialer',color:'#f97316',icon:'☎',badge:'wip'},
+      {id:'pr3',label:'AEON DIAL',url:'https://www.aeondial.com/',color:'#f97316',icon:'☎',badge:'wip'},
+      {id:'pr4',label:'Diversified OS',url:'https://app.snrglabs.com/dashboard',color:'#22d3ee',icon:'◈',badge:'wip'},
+      {id:'pr5',label:'Vulpine Homes',url:'https://vulpinehomes.com/',color:'#4ade80',icon:'⌂',badge:'live'},
+      {id:'pr6',label:'ResumeBot',url:'https://jobs.aeoninvestmentstechnologies.com',color:'#4ade80',icon:'◈',badge:'live'},
+      {id:'pr7',label:'Mashburn',url:'https://mashburn.vercel.app',color:'#4ade80',icon:'◈',badge:'live'},
+      {id:'pr8',label:'Iron Vault Token',url:'https://ironvaulttoken.com/',color:'#fbbf24',icon:'▣',badge:'wip'},
+      {id:'pr9',label:'AEON Protocol',url:'https://www.aeonprotocol.com/',color:'#a78bfa',icon:'◈',badge:'live'},
+      {id:'pr10',label:'ATOM DeFi',url:'https://www.atomdefi.tech/',color:'#4f9cf9',icon:'⬡'},
+      {id:'pr11',label:'Vulpine LLC',url:'https://vulpine.llc/',color:'#f97316',icon:'◇',badge:'live'},
+      {id:'pr12',label:'SNRG Labs',url:'https://www.snrglabs.com/',color:'#f97316',icon:'▣',badge:'live'},
+      {id:'pr13',label:'G3 Contracting',url:'https://www.g3homeremodel.com/',color:'#4ade80',icon:'⌂',badge:'live'},
+      {id:'pr14',label:'Raw2Recruited',url:'https://www.raw2recruited.com/',color:'#4ade80',icon:'◉',badge:'live'},
+      {id:'pr15',label:'AEON Investments',url:'https://aeoninvestmentstechnologies.com/',color:'#f97316',icon:'◈',badge:'live'},
+      {id:'pr16',label:'smart4technology',url:'https://smart4technology.com/',color:'#22d3ee',icon:'⬡'}
+    ]},
+    {id:'s_video',label:'Video Generation',filter:'video',priority:false,cards:[
+      {id:'vd1',label:'Hailuo AI',url:'https://hailuoai.video/',color:'#a78bfa',icon:'▶'},
+      {id:'vd2',label:'WaveSpeed AI',url:'https://wavespeed.ai/models/wavespeed-ai/video-outpainter',color:'#22d3ee',icon:'⋈'},
+      {id:'vd3',label:'Leonardo AI',url:'https://leonardo.ai/',color:'#a78bfa',icon:'✦'},
+      {id:'vd4',label:'Kling AI',url:'https://app.klingai.com/global/',color:'#f97316',icon:'▶'},
+      {id:'vd5',label:'Runway',url:'https://app.runwayml.com/',color:'#eaf0f6',icon:'▶'},
+      {id:'vd6',label:'InVideo',url:'https://invideo.io/',color:'#22d3ee',icon:'▶'},
+      {id:'vd7',label:'RepublicLabs',url:'https://republiclabs.ai/',color:'#f87171',icon:'◈'},
+      {id:'vd8',label:'Creatify',url:'https://app.creatify.ai/home',color:'#a78bfa',icon:'▶'},
+      {id:'vd9',label:'Synthesia',url:'https://www.synthesia.io/',color:'#22d3ee',icon:'▶'},
+      {id:'vd10',label:'LTX Studio',url:'https://ltx.studio/',color:'#f97316',icon:'▶'},
+      {id:'vd11',label:'Visla',url:'https://www.visla.us/',color:'#38bdf8',icon:'▶'},
+      {id:'vd12',label:'Luma Ray2',url:'https://lumalabs.ai/ray',color:'#a78bfa',icon:'◎'},
+      {id:'vd13',label:'Banuba AR',url:'https://www.banuba.com/',color:'#22d3ee',icon:'◎'},
+      {id:'vd14',label:'Midjourney',url:'https://www.midjourney.com/home',color:'#eaf0f6',icon:'◇'},
+      {id:'vd15',label:'makewebvideo',url:'https://www.makewebvideo.com/',color:'#f97316',icon:'▶'}
+    ]},
+    {id:'s_tel',label:'Telephony & Comms',filter:'telephony',priority:false,cards:[
+      {id:'tl1',label:'GHL AEON Dial',url:'https://app.gohighlevel.com/v2/location/XtWqMQz9pdgAJtERl7Ik/dashboard',color:'#25d366',icon:'☎'},
+      {id:'tl2',label:'Telnyx Portal',url:'https://portal.telnyx.com/#/login/sign-in',color:'#00bcd4',icon:'◈'},
+      {id:'tl3',label:'Telnyx',url:'https://telnyx.com/',color:'#00bcd4',icon:'◎'},
+      {id:'tl4',label:'Twilio',url:'https://www.twilio.com/en-us',color:'#f22f46',icon:'☎'},
+      {id:'tl5',label:'VoIP.ms',url:'https://voip.ms/signin/index.php?ln=en',color:'#22d3ee',icon:'☎'},
+      {id:'tl6',label:'DIDforSale',url:'https://www.didforsale.com/',color:'#38bdf8',icon:'☎'},
+      {id:'tl7',label:'3CX',url:'https://1559.3cx.cloud/',color:'#a78bfa',icon:'☎'},
+      {id:'tl8',label:'AEON Dial Agent',url:'https://api.aeondial.com/agent.html',color:'#f97316',icon:'☎'},
+      {id:'tl9',label:'ICT Innovations',url:'https://service.ictinnovations.com/',color:'#22d3ee',icon:'◈'},
+      {id:'tl10',label:'GOautodial v4',url:'https://goautodial.org/news/66',color:'#4ade80',icon:'☎'},
+      {id:'tl11',label:'RefaceKit.sbs',url:'https://refacekit.sbs/',color:'#f87171',icon:'◈'},
+      {id:'tl12',label:'BuildingConnected',url:'https://app.buildingconnected.com/',color:'#f97316',icon:'⊞'}
+    ]},
+    {id:'s_ui',label:'UI Libraries & Components',filter:'ui',priority:false,cards:[
+      {id:'ui1',label:'shadcn/ui',url:'https://ui.shadcn.com/docs/components',color:'#eaf0f6',icon:'◻'},
+      {id:'ui2',label:'MUI',url:'https://mui.com/',color:'#007fff',icon:'⊞'},
+      {id:'ui3',label:'Untitled UI',url:'https://www.untitledui.com/react',color:'#a78bfa',icon:'◇'},
+      {id:'ui4',label:'Motion Primitives',url:'https://motion-primitives.com/',color:'#22d3ee',icon:'⋈'},
+      {id:'ui5',label:'Animata',url:'https://animata.design/docs/accordion/faq',color:'#f97316',icon:'⋈'},
+      {id:'ui6',label:'hover.dev',url:'https://www.hover.dev/components',color:'#a78bfa',icon:'⋈'},
+      {id:'ui7',label:'Animate UI',url:'https://animate-ui.com/docs/components',color:'#22d3ee',icon:'⋈'},
+      {id:'ui8',label:'DynaUI',url:'https://www.dynaui.design/',color:'#f97316',icon:'◇'},
+      {id:'ui9',label:'React Bits',url:'https://www.reactbits.dev/',color:'#38bdf8',icon:'◈'},
+      {id:'ui10',label:'Magic UI',url:'https://magicui.design/',color:'#a78bfa',icon:'✦'},
+      {id:'ui11',label:'Aceternity UI',url:'https://ui.aceternity.com/components',color:'#22d3ee',icon:'◎'},
+      {id:'ui12',label:'Uiverse',url:'https://uiverse.io/elements',color:'#f97316',icon:'◈'},
+      {id:'ui13',label:'Preline UI',url:'https://preline.co/docs/index.html',color:'#38bdf8',icon:'◻'},
+      {id:'ui14',label:'coss UI',url:'https://coss.com/ui/docs',color:'#eaf0f6',icon:'◻'},
+      {id:'ui15',label:'Swiper API',url:'https://swiperjs.com/swiper-api',color:'#f97316',icon:'⋈'},
+      {id:'ui16',label:'UX Pilot',url:'https://uxpilot.ai/a',color:'#a78bfa',icon:'◇'}
+    ]},
+    {id:'s_google',label:'Google Workspace',filter:'google',priority:false,cards:[
+      {id:'gg1',label:'Sheets',url:'https://docs.google.com/spreadsheets/u/1/',color:'#34a853',icon:'⊞'},
+      {id:'gg2',label:'Docs',url:'https://docs.google.com/document/u/1/',color:'#4285f4',icon:'◻'},
+      {id:'gg3',label:'Slides',url:'https://docs.google.com/presentation/u/1/',color:'#fbbc04',icon:'◇'},
+      {id:'gg4',label:'Calendar',url:'https://calendar.google.com/calendar/u/1/r',color:'#4285f4',icon:'◷'},
+      {id:'gg5',label:'Google One',url:'https://one.google.com/u/1/home',color:'#4285f4',icon:'◉'},
+      {id:'gg6',label:'NotebookLM',url:'https://notebooklm.google.com/',color:'#4285f4',icon:'◻'},
+      {id:'gg7',label:'Analytics',url:'https://analytics.google.com/',color:'#f97316',icon:'◉'},
+      {id:'gg8',label:'Google Ads',url:'https://ads.google.com/',color:'#34a853',icon:'⬡'},
+      {id:'gg9',label:'Google Vids',url:'https://docs.google.com/videos/d/13sk0GalrJ9eQ6B2fKNFoyPz9AuNedGCtwOQKVnocp9A/edit',color:'#ea4335',icon:'▶'},
+      {id:'gg10',label:'Google Account',url:'https://myaccount.google.com/u/0/',color:'#4285f4',icon:'◎'},
+      {id:'gg11',label:'Apollo',url:'https://app.apollo.io/#/onboarding-hub/queue',color:'#f97316',icon:'◈'},
+      {id:'gg12',label:'Hunter.io',url:'https://hunter.io/dashboard',color:'#f97316',icon:'◎'},
+      {id:'gg13',label:'People Data Labs',url:'https://dashboard.peopledatalabs.com/',color:'#38bdf8',icon:'◉'},
+      {id:'gg14',label:'Kixie',url:'https://app.kixie.com/',color:'#22d3ee',icon:'☎'}
+    ]},
+    {id:'s_lab',label:'Vercel Lab & Experiments',filter:'lab',priority:false,cards:[
+      {id:'lb1',label:'SIGNAL',url:'https://v0-interface-nu-three.vercel.app/',color:'#f97316',icon:'✦',badge:'fav'},
+      {id:'lb2',label:'Lindy CRM',url:'https://v0-lindy-omega-lake.vercel.app/',color:'#22d3ee',icon:'◈',badge:'fav'},
+      {id:'lb3',label:'Modern SaaS',url:'https://v0-le-lo-saa-s-landing-sigma-ivory.vercel.app/',color:'#a78bfa',icon:'◉',badge:'fav'},
+      {id:'lb4',label:'Aeon v0',url:'https://v0-it-kohl.vercel.app/',color:'#f97316',icon:'◈',badge:'fav'},
+      {id:'lb5',label:'MORAVEC 04',url:'https://v0-the-future-is-now-drab-theta.vercel.app/',color:'#eaf0f6',icon:'◈'},
+      {id:'lb6',label:'Sales CRM',url:'https://v0-sales-crm-design-inky.vercel.app/',color:'#22d3ee',icon:'◉'},
+      {id:'lb7',label:'SaaS Landing',url:'https://v0-saa-s-landing-page-dun-one-85.vercel.app/',color:'#a78bfa',icon:'◇'},
+      {id:'lb8',label:'OptionsPro',url:'https://options-trading-pro.vercel.app/',color:'#4ade80',icon:'◉'},
+      {id:'lb9',label:'AI Agent Builder',url:'https://v0-ai-agent-builder-eight-mu.vercel.app/',color:'#f97316',icon:'⬡'},
+      {id:'lb10',label:'FinBro Dashboard',url:'https://v0-finbro-dashboard-hu.vercel.app/',color:'#4ade80',icon:'◉'},
+      {id:'lb11',label:'Driftwoods CMS',url:'https://cms-driftwood.vercel.app/admin/dashboard',color:'#f97316',icon:'◻'},
+      {id:'lb12',label:'Driftwoods POS',url:'https://restaurant-pos-system-vert.vercel.app/menu',color:'#f97316',icon:'⊞'},
+      {id:'lb13',label:'Frosted Glass CRM',url:'https://v0-frosted-glass-ui-crm-dashboar-seven-lime.vercel.app/',color:'#22d3ee',icon:'◈'},
+      {id:'lb14',label:'v0 Dashboard',url:'https://v0-dashboard-design-requirements-omega-woad-28.vercel.app/team',color:'#a78bfa',icon:'⊞'},
+      {id:'lb15',label:'Sambo Admin',url:'https://v0-admin-dashboard-ten-silk.vercel.app/dashboard',color:'#38bdf8',icon:'⊞'},
+      {id:'lb16',label:'AEON Construction',url:'https://cruz-construction.vercel.app/',color:'#f97316',icon:'⌂'},
+      {id:'lb17',label:'Vulpine Marketplace',url:'https://futuristic-crm.vercel.app/',color:'#a78bfa',icon:'◈'},
+      {id:'lb18',label:'Cliste',url:'https://v0-cliste-website-navigation-smoky-phi.vercel.app/',color:'#22d3ee',icon:'◇'},
+      {id:'lb19',label:'Smart Home',url:'https://v0-modern-smart-home-dashboard-mu-virid.vercel.app/',color:'#4ade80',icon:'⌂'},
+      {id:'lb20',label:'AEON Digital Lab',url:'https://v0-ein-code-digital-lab-tau-steel.vercel.app/',color:'#f97316',icon:'◈'},
+      {id:'lb21',label:'Hugo Pet Care',url:'https://v0-proactive-pet-care-gamma.vercel.app/',color:'#4ade80',icon:'◉'},
+      {id:'lb22',label:'SNRG IT Services',url:'https://snrg-it-services.vercel.app/#testimonials',color:'#f97316',icon:'▣'}
+    ]}
+  ]
+};
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let state;
+function loadState(){try{const s=localStorage.getItem('aeon_ops_v3');state=s?JSON.parse(s):dc(DEFAULT_DATA);}catch(e){state=dc(DEFAULT_DATA);}}
+function save(){localStorage.setItem('aeon_ops_v3',JSON.stringify(state));}
+function dc(o){return JSON.parse(JSON.stringify(o));}
+function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+
+// ── DRAG STATE ─────────────────────────────────────────────────────────────────
+const drag={type:null,id:null,srcSection:null};
+
+// ── RENDER ─────────────────────────────────────────────────────────────────────
+function render(){renderPinned();renderSections();}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function surl(url){try{const u=new URL(url);return(u.hostname+u.pathname).replace(/^www\./,'').slice(0,26).replace(/\/$/,'');}catch{return url.slice(0,26);}}
+
+function renderPinned(){
+  const g=document.getElementById('pinned-grid');
+  g.innerHTML='';
+  state.pinned.forEach(pin=>{
+    const wrap=document.createElement('div');
+    wrap.className='pin-group';
+    const a=document.createElement('div');
+    a.className='pin';
+    a.innerHTML=`<span class="pin-dot" style="background:${esc(pin.color)}"></span>${esc(pin.label)}`;
+    a.addEventListener('click',()=>window.open(pin.url,'_blank'));
+    const btn=document.createElement('button');
+    btn.className='pin-menu-btn';
+    btn.textContent='⋮';
+    btn.addEventListener('click',(e)=>{e.stopPropagation();showDD(e,[
+      {label:'✎  Edit',action:()=>openModal('edit-pin',pin.id,null)},
+      'sep',
+      {label:'✕  Remove',danger:true,action:()=>{state.pinned=state.pinned.filter(p=>p.id!==pin.id);save();renderPinned();}}
+    ]);});
+    wrap.appendChild(a);wrap.appendChild(btn);
+    g.appendChild(wrap);
+  });
+  const addBtn=document.createElement('div');
+  addBtn.className='pin pin-add';
+  addBtn.textContent='+';
+  addBtn.addEventListener('click',()=>openModal('add-pin',null,null));
+  g.appendChild(addBtn);
+}
+
+function renderSections(){
+  const container=document.getElementById('sections-container');
+  container.innerHTML='';
+  const activeFilter=document.querySelector('.tab.active')?.dataset.filter||'all';
+  state.sections.forEach(sec=>{
+    if(activeFilter!=='all'&&sec.filter!==activeFilter)return;
+    container.appendChild(buildSection(sec));
+  });
+  attachDrag();
+}
+
+function buildSection(sec){
+  const wrap=document.createElement('div');
+  wrap.className='section-wrap';
+  wrap.dataset.sectionId=sec.id;
+
+  // header
+  const hdr=document.createElement('div');
+  hdr.className='section-header';
+
+  const handle=document.createElement('div');
+  handle.className='section-drag-handle';
+  handle.title='Drag to reorder section';
+  handle.textContent='⠿';
+  handle.draggable=true;
+  handle.dataset.sectionId=sec.id;
+
+  const lbl=document.createElement('span');
+  lbl.className='sh-label'+(sec.priority?' pri':'');
+  lbl.textContent=sec.label;
+
+  const line=document.createElement('span');
+  line.className='sh-line'+(sec.priority?' pri':'');
+
+  const menuBtn=document.createElement('button');
+  menuBtn.className='section-menu-btn';
+  menuBtn.textContent='⋮';
+  menuBtn.addEventListener('click',(e)=>{e.stopPropagation();showDD(e,[
+    {label:'✎  Rename',action:()=>openModal('rename-sec',sec.id,null)},
+    {label:'+  Add Site',action:()=>openModal('add-card',null,sec.id)},
+    'sep',
+    {label:'✕  Delete Section',danger:true,action:()=>{if(confirm('Delete section "'+sec.label+'" and all its sites?')){state.sections=state.sections.filter(s=>s.id!==sec.id);save();renderSections();}}}
+  ]);});
+
+  hdr.appendChild(handle);hdr.appendChild(lbl);hdr.appendChild(line);hdr.appendChild(menuBtn);
+
+  // grid
+  const grid=document.createElement('div');
+  grid.className='section-grid';
+  grid.dataset.sectionId=sec.id;
+
+  sec.cards.forEach(card=>{grid.appendChild(buildCard(card,sec.id));});
+
+  const addTile=document.createElement('div');
+  addTile.className='add-card-tile';
+  addTile.textContent='+';
+  addTile.dataset.sectionId=sec.id;
+  addTile.addEventListener('click',()=>openModal('add-card',null,sec.id));
+  grid.appendChild(addTile);
+
+  wrap.appendChild(hdr);
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+function buildCard(card,secId){
+  const div=document.createElement('div');
+  div.className='card';
+  div.dataset.cardId=card.id;
+  div.dataset.secId=secId;
+  div.draggable=true;
+  div.style.setProperty('--c-accent',card.color||'#f97316');
+
+  if(card.badge){
+    const bdg=document.createElement('div');
+    const bClass=card.badge==='live'?'b-live':card.badge==='fav'?'b-fav':'b-wip';
+    bdg.className='card-badge '+bClass;
+    bdg.textContent=card.badge.toUpperCase();
+    div.appendChild(bdg);
+  }
+
+  const icon=document.createElement('div');
+  icon.className='card-icon';
+  icon.style.color=card.color||'#f97316';
+  icon.textContent=card.icon||'◈';
+
+  const lbl=document.createElement('div');
+  lbl.className='card-label';
+  lbl.textContent=card.label;
+
+  const url=document.createElement('div');
+  url.className='card-url-txt';
+  url.textContent=surl(card.url);
+
+  div.appendChild(icon);div.appendChild(lbl);div.appendChild(url);
+
+  const menuBtn=document.createElement('button');
+  menuBtn.className='card-menu-btn';
+  menuBtn.textContent='⋮';
+  menuBtn.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    showDD(e,[
+      {label:'✎  Edit',action:()=>openModal('edit-card',card.id,secId)},
+      'sep',
+      {label:'✕  Remove',danger:true,action:()=>{const s=state.sections.find(x=>x.id===secId);if(s){s.cards=s.cards.filter(c=>c.id!==card.id);save();renderSections();}}}
+    ]);
+  });
+  div.appendChild(menuBtn);
+
+  div.addEventListener('click',(e)=>{if(e.target.closest('.card-menu-btn'))return;window.open(card.url,'_blank');});
+  return div;
+}
+
+// ── DRAG & DROP ────────────────────────────────────────────────────────────────
+function attachDrag(){
+  // Card drag
+  document.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('dragstart',onCardDragStart);
+    card.addEventListener('dragend',onDragEnd);
+  });
+  // Section handle drag
+  document.querySelectorAll('.section-drag-handle').forEach(handle=>{
+    handle.addEventListener('dragstart',onSectionDragStart);
+    handle.addEventListener('dragend',onDragEnd);
+  });
+  // Grid drop targets
+  document.querySelectorAll('.section-grid').forEach(grid=>{
+    grid.addEventListener('dragover',onGridOver);
+    grid.addEventListener('drop',onGridDrop);
+  });
+  // Section container drop target
+  const container=document.getElementById('sections-container');
+  container.addEventListener('dragover',onSectionOver);
+  container.addEventListener('drop',onSectionDrop);
+}
+
+function onCardDragStart(e){
+  e.stopPropagation();
+  drag.type='card';drag.id=this.dataset.cardId;drag.srcSection=this.dataset.secId;
+  e.dataTransfer.effectAllowed='move';
+  e.dataTransfer.setData('text/plain',drag.id);
+  setTimeout(()=>this.classList.add('dragging'),0);
+}
+function onSectionDragStart(e){
+  e.stopPropagation();
+  drag.type='section';drag.id=this.dataset.sectionId;
+  e.dataTransfer.effectAllowed='move';
+  e.dataTransfer.setData('text/plain',drag.id);
+  setTimeout(()=>{const w=document.querySelector(`.section-wrap[data-section-id="${drag.id}"]`);if(w)w.classList.add('section-dragging');},0);
+}
+function onDragEnd(){
+  removeSlot();
+  document.querySelectorAll('.dragging').forEach(el=>el.classList.remove('dragging'));
+  document.querySelectorAll('.section-dragging').forEach(el=>el.classList.remove('section-dragging'));
+  drag.type=null;drag.id=null;drag.srcSection=null;
+}
+
+function getAfterEl(container,y){
+  const els=[...container.querySelectorAll('.card:not(.dragging)')];
+  return els.reduce((closest,child)=>{
+    const box=child.getBoundingClientRect();
+    const off=y-box.top-box.height/2;
+    return(off<0&&off>closest.off)?{off,el:child}:closest;
+  },{off:Number.NEGATIVE_INFINITY,el:null}).el;
+}
+
+function onGridOver(e){
+  if(drag.type!=='card')return;
+  e.preventDefault();e.stopPropagation();
+  removeSlot();
+  const slot=document.createElement('div');
+  slot.className='card-drop-slot';slot.id='drop-slot';
+  const after=getAfterEl(this,e.clientY);
+  if(after)this.insertBefore(slot,after);
+  else{const tile=this.querySelector('.add-card-tile');tile?this.insertBefore(slot,tile):this.appendChild(slot);}
+}
+function onGridDrop(e){
+  if(drag.type!=='card')return;
+  e.preventDefault();e.stopPropagation();
+  const targetSecId=this.dataset.sectionId;
+  const slot=document.getElementById('drop-slot');
+  let insertIdx=0;
+  if(slot){[...this.children].some((c,i)=>{if(c===slot){insertIdx=i;return true;}if(c.classList.contains('card'))return false;});}
+  // Count only cards before slot
+  let cardsBefore=0;
+  [...this.children].some(c=>{if(c===slot)return true;if(c.classList.contains('card'))cardsBefore++;});
+  insertIdx=cardsBefore;
+  removeSlot();
+  const srcSec=state.sections.find(s=>s.id===drag.srcSection);
+  if(!srcSec)return;
+  const srcIdx=srcSec.cards.findIndex(c=>c.id===drag.id);
+  if(srcIdx===-1)return;
+  const [cardData]=srcSec.cards.splice(srcIdx,1);
+  const tgtSec=state.sections.find(s=>s.id===targetSecId);
+  if(!tgtSec)return;
+  if(drag.srcSection===targetSecId&&srcIdx<insertIdx)insertIdx--;
+  tgtSec.cards.splice(Math.max(0,insertIdx),0,cardData);
+  save();renderSections();
+}
+
+function onSectionOver(e){
+  if(drag.type!=='section')return;
+  e.preventDefault();
+  removeSlot();
+  const slot=document.createElement('div');
+  slot.className='section-drop-slot';slot.id='drop-slot';
+  const wraps=[...this.querySelectorAll('.section-wrap:not(.section-dragging)')];
+  let inserted=false;
+  for(const w of wraps){
+    const r=w.getBoundingClientRect();
+    if(e.clientY<r.top+r.height/2){this.insertBefore(slot,w);inserted=true;break;}
+  }
+  if(!inserted)this.appendChild(slot);
+}
+function onSectionDrop(e){
+  if(drag.type!=='section')return;
+  e.preventDefault();
+  const slot=document.getElementById('drop-slot');
+  if(!slot)return;
+  const container=document.getElementById('sections-container');
+  let before=0;
+  [...container.children].some(c=>{if(c===slot)return true;if(c.classList.contains('section-wrap'))before++;});
+  const srcIdx=state.sections.findIndex(s=>s.id===drag.id);
+  if(srcIdx===-1){removeSlot();return;}
+  let tgtIdx=before;
+  if(srcIdx<tgtIdx)tgtIdx--;
+  const[sec]=state.sections.splice(srcIdx,1);
+  state.sections.splice(Math.max(0,tgtIdx),0,sec);
+  removeSlot();save();renderSections();
+}
+function removeSlot(){const s=document.getElementById('drop-slot');if(s)s.remove();}
+
+// ── DROPDOWN ──────────────────────────────────────────────────────────────────
+const $dd=document.getElementById('dropdown');
+function showDD(e,items){
+  e.stopPropagation();
+  $dd.innerHTML='';
+  items.forEach(item=>{
+    if(item==='sep'){const s=document.createElement('div');s.className='dd-sep';$dd.appendChild(s);return;}
+    const btn=document.createElement('button');
+    btn.className='dd-item'+(item.danger?' danger':'');
+    btn.textContent=item.label;
+    btn.addEventListener('click',()=>{closeDD();item.action();});
+    $dd.appendChild(btn);
+  });
+  $dd.classList.remove('hidden');
+  const x=Math.min(e.clientX,window.innerWidth-175);
+  const y=Math.min(e.clientY+4,window.innerHeight-$dd.offsetHeight-10);
+  $dd.style.left=x+'px';$dd.style.top=y+'px';
+}
+function closeDD(){$dd.classList.add('hidden');}
+document.addEventListener('click',e=>{if(!$dd.contains(e.target))closeDD();});
+
+// ── MODAL ──────────────────────────────────────────────────────────────────────
+let mCtx={mode:null,tid:null,sid:null,icon:'◈'};
+function openModal(mode,tid,sid){
+  mCtx={mode,tid,sid,icon:'◈'};
+  const isSecRename=mode==='rename-sec';
+  document.getElementById('url-field').style.display=isSecRename?'none':'';
+  document.getElementById('color-icon-row').style.display=isSecRename?'none':'';
+  document.getElementById('icon-field').style.display=isSecRename?'none':'';
+  document.getElementById('m-label').value='';
+  document.getElementById('m-url').value='';
+  document.getElementById('m-color').value='#f97316';
+  mCtx.icon='◈';refreshIconSel();
+  const titles={
+    'add-card':'Add Site','edit-card':'Edit Site',
+    'rename-sec':'Rename Section',
+    'add-pin':'Add Pinned Site','edit-pin':'Edit Pinned Site'
+  };
+  document.getElementById('modal-title').textContent=titles[mode]||'Edit';
+  if(mode==='edit-card'){
+    const sec=state.sections.find(s=>s.id===sid);
+    const card=sec?.cards.find(c=>c.id===tid);
+    if(card){document.getElementById('m-label').value=card.label;document.getElementById('m-url').value=card.url;document.getElementById('m-color').value=card.color||'#f97316';mCtx.icon=card.icon||'◈';refreshIconSel();}
+  }else if(mode==='rename-sec'){
+    const sec=state.sections.find(s=>s.id===tid);
+    if(sec)document.getElementById('m-label').value=sec.label;
+  }else if(mode==='edit-pin'){
+    const pin=state.pinned.find(p=>p.id===tid);
+    if(pin){document.getElementById('m-label').value=pin.label;document.getElementById('m-url').value=pin.url;document.getElementById('m-color').value=pin.color||'#f97316';}
+  }
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('modal-overlay').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('m-label').focus(),50);
+}
+function closeModal(){document.getElementById('modal').classList.add('hidden');document.getElementById('modal-overlay').classList.add('hidden');}
+function saveModal(){
+  const label=document.getElementById('m-label').value.trim();
+  const url=document.getElementById('m-url').value.trim();
+  const color=document.getElementById('m-color').value;
+  const{mode,tid,sid}=mCtx;
+  if(!label)return;
+  if(mode==='add-card'){
+    if(!url)return;
+    const sec=state.sections.find(s=>s.id===sid);
+    if(sec){sec.cards.push({id:uid(),label,url,color,icon:mCtx.icon});save();renderSections();}
+  }else if(mode==='edit-card'){
+    const sec=state.sections.find(s=>s.id===sid);
+    const card=sec?.cards.find(c=>c.id===tid);
+    if(card){card.label=label;card.url=url;card.color=color;card.icon=mCtx.icon;save();renderSections();}
+  }else if(mode==='rename-sec'){
+    const sec=state.sections.find(s=>s.id===tid);
+    if(sec){sec.label=label;save();renderSections();}
+  }else if(mode==='add-pin'){
+    if(!url)return;
+    state.pinned.push({id:uid(),label,url,color});save();renderPinned();
+  }else if(mode==='edit-pin'){
+    const pin=state.pinned.find(p=>p.id===tid);
+    if(pin){pin.label=label;pin.url=url;pin.color=color;save();renderPinned();}
+  }
+  closeModal();
+}
+function refreshIconSel(){
+  document.getElementById('m-icon-display').textContent=mCtx.icon;
+  document.querySelectorAll('.icon-opt').forEach(o=>o.classList.toggle('sel',o.dataset.icon===mCtx.icon));
+}
+function buildIconGrid(){
+  const g=document.getElementById('icon-grid');
+  ICONS.forEach(ic=>{
+    const d=document.createElement('div');
+    d.className='icon-opt';d.dataset.icon=ic;d.textContent=ic;
+    d.addEventListener('click',()=>{mCtx.icon=ic;refreshIconSel();});
+    g.appendChild(d);
+  });
+}
+document.getElementById('modal-cancel').addEventListener('click',closeModal);
+document.getElementById('modal-overlay').addEventListener('click',closeModal);
+document.getElementById('modal-save').addEventListener('click',saveModal);
+document.getElementById('m-label').addEventListener('keydown',e=>{if(e.key==='Enter')saveModal();});
+
+// ── ADD SECTION ────────────────────────────────────────────────────────────────
+document.getElementById('add-section-btn').addEventListener('click',()=>{
+  const label=prompt('New section name:');
+  if(!label?.trim())return;
+  state.sections.push({id:uid(),label:label.trim(),filter:'custom',priority:false,cards:[]});
+  save();renderSections();
+});
+
+// ── TABS ───────────────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    renderSections();
+  });
+});
+
+// ── CLOCK ──────────────────────────────────────────────────────────────────────
+function tick(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  const D=['SUN','MON','TUE','WED','THU','FRI','SAT'],M=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  document.getElementById('clk').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+  document.getElementById('clk-date').textContent=`${D[n.getDay()]} · ${M[n.getMonth()]} ${n.getDate()}, ${n.getFullYear()}`;
+}
+
+// ── SEARCH / KEYBOARD ──────────────────────────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&document.activeElement.tagName!=='INPUT'){e.preventDefault();document.getElementById('srch').focus();}
+  if(e.key==='Escape'){closeModal();closeDD();if(document.activeElement.tagName==='INPUT')document.activeElement.blur();}
+});
+
+// ── RESET ──────────────────────────────────────────────────────────────────────
+window.resetDashboard=()=>{
+  if(confirm('Reset everything to defaults? Cannot be undone.')){
+    localStorage.removeItem('aeon_ops_v3');
+    state=dc(DEFAULT_DATA);save();render();
+  }
+};
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+loadState();buildIconGrid();render();tick();setInterval(tick,1000);
+</script>
+<script src="logo_patch.js"></script>
+</body>
+</html>
