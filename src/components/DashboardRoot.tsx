@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   DndContext,
   DragEndEvent,
@@ -75,6 +75,7 @@ export default function DashboardRoot() {
   const [modalTarget, setModalTarget] = useState<ModalTarget>(null)
   const [modalSectionId, setModalSectionId] = useState<string | undefined>()
   const [activeId, setActiveId] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
   const visibleSections = useMemo(
@@ -85,6 +86,10 @@ export default function DashboardRoot() {
     () => state.sections.flatMap((section) => section.cards).find((card) => card.id === activeId),
     [activeId, state.sections],
   )
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   function handleDragStart(event: DragStartEvent) {
     setActiveId(String(event.active.id))
@@ -210,24 +215,26 @@ export default function DashboardRoot() {
           ))}
         </div>
 
-        <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <div>
-            {visibleSections.map((section) => (
-              <SectionBlock
-                key={section.id}
-                section={section}
-                handlers={{
-                  onEditCard: (sectionId, card) => openModal('edit-card', card, sectionId),
-                  onRemoveCard: removeCard,
-                  onAddCard: (sectionId) => openModal('add-card', null, sectionId),
-                  onRenameSection: (target) => openModal('rename-sec', target),
-                  onRemoveSection: removeSection,
-                }}
-              />
-            ))}
-          </div>
-          <DragOverlay>{activeCard ? <OverlayCard card={activeCard} /> : null}</DragOverlay>
-        </DndContext>
+        {mounted && (
+          <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <div>
+              {visibleSections.map((section) => (
+                <SectionBlock
+                  key={section.id}
+                  section={section}
+                  handlers={{
+                    onEditCard: (sectionId, card) => openModal('edit-card', card, sectionId),
+                    onRemoveCard: removeCard,
+                    onAddCard: (sectionId) => openModal('add-card', null, sectionId),
+                    onRenameSection: (target) => openModal('rename-sec', target),
+                    onRemoveSection: removeSection,
+                  }}
+                />
+              ))}
+            </div>
+            <DragOverlay>{activeCard ? <OverlayCard card={activeCard} /> : null}</DragOverlay>
+          </DndContext>
+        )}
 
         <button className="add-section-btn" type="button" onClick={addSectionFromPrompt}>
           + Add Section
