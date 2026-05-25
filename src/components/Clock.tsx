@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 
 const formatClock = (date: Date) => ({
-  time: date.toLocaleTimeString('en-US', { hour12: false }),
+  time: date.toLocaleTimeString('en-US', { hour12: true }),
   day: date
     .toLocaleDateString('en-US', {
       weekday: 'long',
@@ -27,7 +27,7 @@ export default function Clock() {
 
   return (
     <div className="clock-block">
-      <div className="clock-time">{clock?.time ?? '--:--:--'}</div>
+      <div className="clock-time">{clock?.time ?? '--:--:-- --'}</div>
       <div className="clock-date">{clock?.day.replace(' ', ' · ') ?? '--- · --- -- ----'}</div>
     </div>
   )
