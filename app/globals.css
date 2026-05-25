@@ -71,8 +71,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .card:hover::before{opacity:1;}
 .card.dragging{opacity:.25;transform:scale(.97);}
 .card-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:78px;height:78px;margin:0;display:flex;align-items:center;justify-content:center;font-size:42px;line-height:1;pointer-events:none;opacity:.98;}
-.card-icon::before{content:'';position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.1) 0%,rgba(255,255,255,.045) 42%,transparent 72%);opacity:.55;}
-.card-icon img{position:relative;z-index:1;width:72px!important;height:72px!important;object-fit:contain;border-radius:8px;display:block;filter:brightness(1.12) contrast(1.08) drop-shadow(0 7px 14px rgba(0,0,0,.45));}
+.card-icon img{position:relative;z-index:1;width:72px!important;height:72px!important;object-fit:contain;border-radius:8px;display:block;filter:drop-shadow(0 7px 14px rgba(0,0,0,.45));}
 .card-icon span{position:relative;z-index:1;font-size:42px;line-height:1;filter:drop-shadow(0 7px 14px rgba(0,0,0,.45));}
 .card-label{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--text-bright);line-height:1.2;}
 .card-url-txt{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text-dim);margin-top:3px;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
