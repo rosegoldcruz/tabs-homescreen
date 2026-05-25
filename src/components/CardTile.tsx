@@ -83,10 +83,10 @@ export default function CardTile({ card, onEdit, onRemove }: CardTileProps) {
           <img
             ref={imageRef}
             src={`/logos/${card.id}.png`}
-            width={22}
-            height={22}
+            width={72}
+            height={72}
             alt=""
-            style={{ objectFit: 'contain', borderRadius: 3 }}
+            style={{ objectFit: 'contain', borderRadius: 8 }}
             onError={() => {
               setLogoFailed(true)
               if (iconRef.current) iconRef.current.style.display = 'block'
